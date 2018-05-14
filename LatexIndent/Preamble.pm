@@ -21,15 +21,6 @@ use LatexIndent::Switches qw/$is_t_switch_active/;
 use LatexIndent::GetYamlSettings qw/%masterSettings/;
 use LatexIndent::LogFile qw/$logger/;
 our @ISA = "LatexIndent::Document"; # class inheritance, Programming Perl, pg 321
-our $preambleCounter;
-
-sub create_unique_id{
-    my $self = shift;
-
-    $preambleCounter++;
-    ${$self}{id} = "$tokens{preamble}$preambleCounter$tokens{endOfToken}";
-    return;
-}
 
 sub get_replacement_text{
     my $self = shift;

@@ -25,7 +25,6 @@ use Data::Dumper;
 use Exporter qw/import/;
 our @ISA = "LatexIndent::Document"; # class inheritance, Programming Perl, pg 321
 our @EXPORT_OK = qw/construct_command_regexp $commandRegExp $commandRegExpTrailingComment $optAndMandAndRoundBracketsRegExpLineBreaks/;
-our $commandCounter;
 our $commandRegExp;
 our $commandRegExpTrailingComment; 
 our $optAndMandAndRoundBracketsRegExp; 
@@ -186,14 +185,6 @@ sub tasks_particular_to_each_object{
 
 sub check_linebreaks_before_equals{
     # empty routine, which allows the above routine to function (this routine kicks in for KeyEqualsValuesBraces)
-    return;
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $commandCounter++;
-    ${$self}{id} = "$tokens{commands}$commandCounter";
     return;
 }
 

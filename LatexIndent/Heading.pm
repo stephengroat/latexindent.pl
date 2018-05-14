@@ -127,6 +127,7 @@ sub find_heading{
                                 $headingRegExp
                                /
                                 # create a new heading object
+                                $headingCounter++;
                                 my $headingObject = LatexIndent::Heading->new(begin=>q(),
                                                                         body=>$1.$3,
                                                                         end=>q(),
@@ -141,6 +142,7 @@ sub find_heading{
                                                                         },
                                                                         modifyLineBreaksYamlName=>"afterHeading",
                                                                         endImmediatelyFollowedByComment=>0,
+                                                                        id=>$tokens{afterHeading}.$headingCounter,
                                                                       );
 
                                 # the settings and storage of most objects has a lot in common
@@ -158,15 +160,6 @@ sub get_replacement_text{
     $logger->trace("Custom replacement text routine for ${$self}{name}") if $is_t_switch_active;
     ${$self}{replacementText} = ${$self}{id}.${$self}{afterbit};
     delete ${$self}{afterbit};
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $headingCounter++;
-
-    ${$self}{id} = "$tokens{afterHeading}$headingCounter";
-    return;
 }
 
 sub adjust_replacement_text_line_breaks_at_end{

@@ -62,6 +62,7 @@ sub find_environments{
       ${$self}{body} =~ s/
                 $environmentRegExp(\h*)($trailingCommentRegExp)?
              /
+                $environmentCounter++;
                 # create a new Environment object
                 my $env = LatexIndent::Environment->new(begin=>$1,
                                                         name=>$2,
@@ -75,6 +76,7 @@ sub find_environments{
                                                         modifyLineBreaksYamlName=>"environments",
                                                         endImmediatelyFollowedByComment=>$8?0:($10?1:0),
                                                         horizontalTrailingSpace=>$7?$7:q(),
+                                                        id=>$tokens{environments}.$environmentCounter,
                                                       );
 
                 # log file output
@@ -114,14 +116,4 @@ sub tasks_particular_to_each_object{
     $self->find_ifelsefi;
 
 }
-
-sub create_unique_id{
-    my $self = shift;
-
-    $environmentCounter++;
-    ${$self}{id} = "$tokens{environments}$environmentCounter";
-    return;
-}
-
-
 1;

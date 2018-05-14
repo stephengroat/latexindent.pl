@@ -64,6 +64,7 @@ sub find_ifelsefi{
                 $ifElseFiRegExp(\h*)($trailingCommentRegExp)?
                     /
                         # create a new IfElseFi object
+                        $ifElseFiCounter++;
                         my $ifElseFi = LatexIndent::IfElseFi->new(begin=>$1.(($4 eq "\n" and !$3)?"\n":q()),
                                                                 name=>$2,
                                                                 # if $4 is a line break, don't count it twice (it will already be in 'begin')
@@ -85,6 +86,7 @@ sub find_ifelsefi{
                                                                 modifyLineBreaksYamlName=>"ifElseFi",
                                                                 endImmediatelyFollowedByComment=>$9?0:($11?1:0),
                                                                 horizontalTrailingSpace=>$8?$8:q(),
+                                                                id=>$tokens{ifElseFi}.$ifElseFiCounter,
                                                               );
                         # log file output
                         $logger->trace("*IfElseFi found: $2")if $is_t_switch_active;
@@ -192,16 +194,5 @@ sub wrap_up_statement{
     $logger->trace("*Finished indenting ${$self}{name}") if $is_t_switch_active;
     return $self;
 }
-
-
-sub create_unique_id{
-    my $self = shift;
-
-    $ifElseFiCounter++;
-
-    ${$self}{id} = "$tokens{ifElseFi}$ifElseFiCounter";
-    return;
-}
-
 
 1;

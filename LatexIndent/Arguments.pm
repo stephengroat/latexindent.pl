@@ -64,6 +64,7 @@ sub find_opt_mand_arguments{
         # so some of the properties common to other objects, such 
         # as environment, ifelsefi, etc do not exist for Arguments;
         # they will, however, exist for its children: OptionalArgument, MandatoryArgument
+        $ArgumentCounter++;
         my $arguments = LatexIndent::Arguments->new(begin=>"",
                                                 name=>${$self}{name}.":arguments",
                                                 parent=>${$self}{name},
@@ -74,10 +75,8 @@ sub find_opt_mand_arguments{
                                                 end=>"",
                                                 regexp=>$objectDependentOptAndMandRegExp,
                                                 endImmediatelyFollowedByComment=>$2?0:($3?1:0),
+                                                id=>$tokens{arguments}.$ArgumentCounter.$tokens{endOfToken},
                                               );
-
-        # give unique id
-        $arguments->create_unique_id;
 
         # determine which comes first, optional or mandatory
         if(${$arguments}{body} =~ m/.*?((?<!\\)\{|\[)/s){
@@ -197,15 +196,6 @@ sub find_opt_mand_arguments{
         $logger->trace("... no arguments found") if $is_t_switch_active;
     }
 
-}
-
-
-sub create_unique_id{
-    my $self = shift;
-
-    $ArgumentCounter++;
-    ${$self}{id} = "$tokens{arguments}$ArgumentCounter$tokens{endOfToken}";
-    return;
 }
 
 sub get_numbered_arg_regexp{

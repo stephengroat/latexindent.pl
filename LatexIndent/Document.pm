@@ -297,9 +297,6 @@ sub tasks_common_to_each_object{
     # get settings for this object
     $self->get_indentation_settings_for_this_object;
 
-    # give unique id
-    $self->create_unique_id;
-
     # add trailing text to the id to stop, e.g LATEX-INDENT-ENVIRONMENT1 matching LATEX-INDENT-ENVIRONMENT10
     ${$self}{id} .= $tokens{endOfToken};
 

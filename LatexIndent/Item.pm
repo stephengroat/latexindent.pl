@@ -81,6 +81,7 @@ sub find_items{
                             $itemRegExp(\h*)($trailingCommentRegExp)?
                            /
                             # create a new Item object
+                            $itemCounter++;
                             my $itemObject = LatexIndent::Item->new(begin=>$1,
                                                                     body=>$4,
                                                                     end=>q(),
@@ -97,6 +98,7 @@ sub find_items{
                                                                     },
                                                                     modifyLineBreaksYamlName=>"items",
                                                                     endImmediatelyFollowedByComment=>$5?0:($7?1:0),
+                                                                    id=>$tokens{items}.$itemCounter,
                                                                   );
 
                             # the settings and storage of most objects has a lot in common
@@ -104,16 +106,6 @@ sub find_items{
                             ${@{${$self}{children}}[-1]}{replacementText}.($6?$6:q()).($7?$7:q());
                            /xseg;
     }
-}
-
-
-sub create_unique_id{
-    my $self = shift;
-
-    $itemCounter++;
-
-    ${$self}{id} = "$tokens{items}$itemCounter";
-    return;
 }
 
 sub tasks_particular_to_each_object{

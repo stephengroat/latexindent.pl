@@ -59,15 +59,14 @@ sub find_noindent_block{
             while( ${$self}{body} =~ m/$noIndentRegExp/sx){
 
               # create a new Environment object
+              $verbatimCounter++;
               my $noIndentBlockObj = LatexIndent::Verbatim->new( begin=>$1,
                                                     body=>$2,
                                                     end=>$3,
                                                     name=>$noIndentBlock,
+                                                    id=>$tokens{verbatim}.$verbatimCounter.$tokens{endOfToken},
                                                     );
             
-              # give unique id
-              $noIndentBlockObj->create_unique_id;
-
               # verbatim children go in special hash
               ${$self}{verbatim}{${$noIndentBlockObj}{id}}=$noIndentBlockObj;
 
@@ -116,14 +115,14 @@ sub find_verbatim_environments{
             while( ${$self}{body} =~ m/$verbatimRegExp/sx){
 
               # create a new Environment object
+              $verbatimCounter++;
               my $verbatimBlock = LatexIndent::Verbatim->new( begin=>$1,
                                                     body=>$2,
                                                     end=>$3,
                                                     name=>$verbEnv,
+                                                    id=>$tokens{verbatim}.$verbatimCounter.$tokens{endOfToken},
                                                     );
-              # give unique id
-              $verbatimBlock->create_unique_id;
-
+                                                    
               # verbatim children go in special hash
               ${$self}{verbatim}{${$verbatimBlock}{id}}=$verbatimBlock;
 
@@ -187,15 +186,14 @@ sub find_verbatim_commands{
             while( ${$self}{body} =~ m/$verbatimCommandRegExp/){
 
               # create a new Environment object
+              $verbatimCounter++;
               my $verbatimCommand = LatexIndent::Verbatim->new( begin=>$1.($2?$2:q()).$3,
                                                     body=>$4,
                                                     end=>$3,
                                                     name=>$verbCommand,
                                                     optArg=>$2?$2:q(),
+                                                    id=>$tokens{verbatim}.$verbatimCounter.$tokens{endOfToken},
                                                     );
-              # give unique id
-              $verbatimCommand->create_unique_id;
-
               # output, if desired
               $logger->trace(Dumper($verbatimCommand),'ttrace') if($is_tt_switch_active);
 
@@ -304,14 +302,6 @@ sub  put_verbatim_commands_back_in {
     # logfile info
     $logger->trace('*Post-processed body:') if $is_tt_switch_active;
     $logger->trace(${$self}{body}) if($is_tt_switch_active);
-    return;
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $verbatimCounter++;
-    ${$self}{id} = "$tokens{verbatim}$verbatimCounter$tokens{endOfToken}";
     return;
 }
 

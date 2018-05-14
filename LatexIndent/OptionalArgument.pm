@@ -54,6 +54,7 @@ sub find_optional_arguments{
                             $optArgRegExp(\h*)($trailingCommentRegExp)*(.*)
                            /
                             # create a new Optional Argument object
+                            $optionalArgumentCounter++;
                             my $optionalArg = LatexIndent::OptionalArgument->new(begin=>$1,
                                                                     name=>${$self}{name}.":optionalArgument",
                                                                     nameForIndentationSettings=>${$self}{parent},
@@ -79,6 +80,7 @@ sub find_optional_arguments{
                                                                     # the last argument (determined by $10 eq '') needs information from the argument container object
                                                                     endImmediatelyFollowedByComment=>($10 eq '')?${$self}{endImmediatelyFollowedByComment}:($9?1:0),
                                                                     horizontalTrailingSpace=>$6?$6:q(),
+                                                                    id=>$tokens{optionalArguments}.$optionalArgumentCounter,
                                                                   );
 
                             # the settings and storage of most objects has a lot in common
@@ -92,14 +94,6 @@ sub get_object_attribute_for_indentation_settings{
     my $self = shift;
     
     return ${$self}{modifyLineBreaksYamlName};
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $optionalArgumentCounter++;
-    ${$self}{id} = "$tokens{optionalArguments}$optionalArgumentCounter";
-    return;
 }
 
 sub tasks_particular_to_each_object{

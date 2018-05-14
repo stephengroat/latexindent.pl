@@ -23,11 +23,15 @@ use LatexIndent::NamedGroupingBracesBrackets qw/$grouping_braces_regexp $groupin
 use LatexIndent::UnNamedGroupingBracesBrackets qw/$un_named_grouping_braces_RegExp $un_named_grouping_braces_RegExp_trailing_comment/;
 use LatexIndent::Switches qw/$is_t_switch_active $is_tt_switch_active/;
 use LatexIndent::LogFile qw/$logger/;
+use LatexIndent::Tokens qw/token_check %tokens/;
 use Data::Dumper;
 use Exporter qw/import/;
 our @ISA = "LatexIndent::Document"; # class inheritance, Programming Perl, pg 321
 our @EXPORT_OK = qw/find_commands_or_key_equals_values_braces/;
 our $commandCounter;
+our $key_equals_values_braces_Counter;
+our $groupingBracesCounter;
+our $unNamedGroupingBracesCounter;
 
 sub find_commands_or_key_equals_values_braces{
 
@@ -51,6 +55,7 @@ sub find_commands_or_key_equals_values_braces{
                             $commandRegExpTrailingComment
                           /
                             # create a new command object
+                            $commandCounter++;
                             my $command = LatexIndent::Command->new(begin=>$1.$2.($3?$3:q()).($4?$4:q()),
                                                                     name=>$2,
                                                                     body=>$5.($8?$8:($10?$10:q())),    # $8 is linebreak, $10 is trailing comment
@@ -68,6 +73,7 @@ sub find_commands_or_key_equals_values_braces{
                                                                       BodyStartsOnOwnLine=>"CommandNameFinishesWithLineBreak",
                                                                     },
                                                                     optAndMandArgsRegExp=>$optAndMandAndRoundBracketsRegExpLineBreaks,
+                                                                    id=>$tokens{commands}.$commandCounter,
                                                                   );
                                                                   
                             # log file output
@@ -85,6 +91,7 @@ sub find_commands_or_key_equals_values_braces{
                               $key_equals_values_bracesRegExpTrailingComment
                            /
                            # create a new key_equals_values_braces object
+                           $key_equals_values_braces_Counter++;
                            my $key_equals_values_braces = LatexIndent::KeyEqualsValuesBraces->new(
                                                                    begin=>($2?$2:q()).$3.$4.($5?$5:q()),
                                                                    name=>$3,
@@ -104,6 +111,7 @@ sub find_commands_or_key_equals_values_braces{
                                                                      BodyStartsOnOwnLine=>"EqualsFinishesWithLineBreak",
                                                                    },
                                                                    additionalAssignments=>["EqualsStartsOnOwnLine"],
+                                                                   id=>$tokens{keyEqualsValuesBracesBrackets}.$key_equals_values_braces_Counter,
                                                                  );
                                                                  
                            # log file output
@@ -121,6 +129,7 @@ sub find_commands_or_key_equals_values_braces{
                             $grouping_braces_regexpTrailingComment
                             /
                             # create a new key_equals_values_braces object
+                            $groupingBracesCounter++;
                             my $grouping_braces = LatexIndent::NamedGroupingBracesBrackets->new(
                                                                     begin=>$2.($3?$3:q()).($4?$4:q()),
                                                                     name=>$2,
@@ -139,6 +148,7 @@ sub find_commands_or_key_equals_values_braces{
                                                                       # body statements
                                                                       BodyStartsOnOwnLine=>"NameFinishesWithLineBreak",
                                                                     },
+                                                                    id=>$tokens{namedGroupingBracesBrackets}.$groupingBracesCounter,
                                                                   );
                             # log file output
                             $logger->trace("*named grouping braces found: $2") if $is_t_switch_active ;
@@ -154,6 +164,7 @@ sub find_commands_or_key_equals_values_braces{
                             $un_named_grouping_braces_RegExp_trailing_comment
                           /
                             # create a new Un-named-grouping-braces-brackets object
+                            $unNamedGroupingBracesCounter++;
                             my $un_named_grouping_braces = LatexIndent::UnNamedGroupingBracesBrackets->new(
                                                                     begin=>q(),
                                                                     name=>"always-un-named",
@@ -170,6 +181,7 @@ sub find_commands_or_key_equals_values_braces{
                                                                     BeginStartsOnOwnLine=>0,
                                                                     # body statements
                                                                     BodyStartsOnOwnLine=>0,
+                                                                    id=>$tokens{UnNamedGroupingBracesBrackets}.$unNamedGroupingBracesCounter,
                                                                   );
 
                             # log file output

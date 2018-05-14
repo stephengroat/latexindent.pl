@@ -24,7 +24,6 @@ use Data::Dumper;
 use Exporter qw/import/;
 our @ISA = "LatexIndent::Command"; # class inheritance, Programming Perl, pg 321
 our @EXPORT_OK = qw/construct_key_equals_values_regexp $key_equals_values_bracesRegExp $key_equals_values_bracesRegExpTrailingComment/;
-our $key_equals_values_braces_Counter;
 our $key_equals_values_bracesRegExp; 
 our $key_equals_values_bracesRegExpTrailingComment; 
 
@@ -99,14 +98,6 @@ sub check_linebreaks_before_equals{
             ${$self}{begin} =~ s/\h*=/%\n=/s;
       }
     }
-    return;
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $key_equals_values_braces_Counter++;
-    ${$self}{id} = "$tokens{keyEqualsValuesBracesBrackets}$key_equals_values_braces_Counter";
     return;
 }
 

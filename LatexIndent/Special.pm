@@ -139,6 +139,7 @@ sub find_special{
                                     $specialRegExp(\h*)($trailingCommentRegExp)?
                                    /
                                     # create a new special object
+                                    $specialCounter++;
                                     my $specialObject = LatexIndent::Special->new(begin=>$1,
                                                                             body=>$3,
                                                                             end=>$5,
@@ -161,6 +162,7 @@ sub find_special{
                                                                             modifyLineBreaksYamlName=>"specialBeginEnd",
                                                                             endImmediatelyFollowedByComment=>$7?0:($9?1:0),
                                                                             horizontalTrailingSpace=>$6?$6:q(),
+                                                                            id=>$tokens{specialBeginEnd}.$specialCounter,
                                                                           );
 
                                     # log file output
@@ -251,16 +253,6 @@ sub post_indentation_check{
             ${$self}{body} =~ s/^\h*($else{regExp})/${$self}{surroundingIndentation}$1/smg;
         }
     }
-    return;
-}
-
-
-sub create_unique_id{
-    my $self = shift;
-
-    $specialCounter++;
-
-    ${$self}{id} = "$tokens{specialBeginEnd}$specialCounter";
     return;
 }
 

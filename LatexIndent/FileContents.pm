@@ -25,6 +25,7 @@ use Exporter qw/import/;
 our @EXPORT_OK = qw/find_file_contents_environments_and_preamble/;
 our @ISA = "LatexIndent::Document"; # class inheritance, Programming Perl, pg 321
 our $fileContentsCounter;
+our $preambleCounter;
 
 sub find_file_contents_environments_and_preamble{
     my $self = shift;
@@ -66,6 +67,7 @@ sub find_file_contents_environments_and_preamble{
             while( ${$self}{body} =~ m/$fileContentsRegExp/sx){
 
               # create a new Environment object
+              $fileContentsCounter++;
               my $fileContentsBlock = LatexIndent::FileContents->new( begin=>$1,
                                                     body=>$2,
                                                     end=>$3,
@@ -76,9 +78,8 @@ sub find_file_contents_environments_and_preamble{
                                                       end=>$4?1:0,
                                                     },
                                                     modifyLineBreaksYamlName=>"filecontents",
+                                                    id=>$tokens{filecontents}.$fileContentsCounter.$tokens{endOfToken},
                                                     );
-              # give unique id
-              $fileContentsBlock->create_unique_id;
 
               # the replacement text can be just the ID, but the ID might have a line break at the end of it
               $fileContentsBlock->get_replacement_text;
@@ -123,6 +124,7 @@ sub find_file_contents_environments_and_preamble{
         $logger->trace("\\begin{document} found in body (after searching for filecontents)-- assuming that a preamble exists") if $is_t_switch_active ;
 
         # create a preamble object
+        $preambleCounter++;
         $preamble = LatexIndent::Preamble->new( begin=>q(),
                                               body=>$1,
                                               end=>q(),
@@ -134,10 +136,8 @@ sub find_file_contents_environments_and_preamble{
                                               },
                                               afterbit=>($2?$2:q())."\\begin{document}",
                                               modifyLineBreaksYamlName=>"preamble",
+                                              id=>$tokens{preamble}.$preambleCounter.$tokens{endOfToken},
                                               );
-
-        # give unique id
-        $preamble->create_unique_id;
 
         # get the replacement_text
         $preamble->get_replacement_text;
@@ -201,14 +201,6 @@ sub find_file_contents_environments_and_preamble{
         $preamble->tasks_particular_to_each_object;
         push(@{${$self}{children}},$preamble);
     }
-    return;
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $fileContentsCounter++;
-    ${$self}{id} = "$tokens{filecontents}$fileContentsCounter$tokens{endOfToken}";
     return;
 }
 

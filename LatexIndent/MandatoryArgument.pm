@@ -40,6 +40,7 @@ sub find_mandatory_arguments{
                             $mandArgRegExp(\h*)($trailingCommentRegExp)*(.*)
                            /
                             # create a new Mandatory Argument object
+                            $mandatoryArgumentCounter++;
                             my $mandatoryArg = LatexIndent::MandatoryArgument->new(begin=>$1,
                                                                     name=>${$self}{name}.":mandatoryArgument",
                                                                     nameForIndentationSettings=>${$self}{parent},
@@ -65,6 +66,7 @@ sub find_mandatory_arguments{
                                                                     modifyLineBreaksYamlName=>"mandatoryArguments",
                                                                     # the last argument (determined by $10 eq '') needs information from the argument container object
                                                                     endImmediatelyFollowedByComment=>($10 eq '')?${$self}{endImmediatelyFollowedByComment}:($9?1:0),
+                                                                    id=>$tokens{mandatoryArguments}.$mandatoryArgumentCounter,
                                                                   );
 
                             # the settings and storage of most objects has a lot in common
@@ -74,14 +76,6 @@ sub find_mandatory_arguments{
     $self->wrap_up_tasks;
         }
   }
-
-sub create_unique_id{
-    my $self = shift;
-
-    $mandatoryArgumentCounter++;
-    ${$self}{id} = "$tokens{mandatoryArguments}$mandatoryArgumentCounter";
-    return;
-}
 
 sub get_mand_arg_reg_exp{
 

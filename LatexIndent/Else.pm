@@ -53,6 +53,7 @@ sub check_for_else_statement{
         ${$self}{body} =~ s/$elseRegExp(\h*)($trailingCommentRegExp)?
                            /   
                           # create a new IfElseFi object
+                          $elseCounter++;
                           my $else = LatexIndent::Else->new(begin=>$1,
                                                                   name=>${$self}{name},
                                                                   storageNameAppend=>$input{storageNameAppend},
@@ -72,6 +73,7 @@ sub check_for_else_statement{
                                                                   modifyLineBreaksYamlName=>${$self}{modifyLineBreaksYamlName},
                                                                   endImmediatelyFollowedByComment=>0,
                                                                   horizontalTrailingSpace=>q(),
+                                                                  id=>$tokens{else}.$elseCounter,
                                                                 );
                           # log file output
                           $logger->trace("*$input{logName} found: ${$self}{name}")if $is_t_switch_active;
@@ -112,15 +114,6 @@ sub tasks_particular_to_each_object{
 
 sub get_indentation_information{
     return q();
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $elseCounter++;
-
-    ${$self}{id} = "$tokens{else}$elseCounter";
-    return;
 }
 
 1;

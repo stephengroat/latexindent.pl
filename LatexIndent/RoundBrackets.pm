@@ -55,6 +55,7 @@ sub find_round_brackets{
                             $roundBracketRegExp(\h*)($trailingCommentRegExp)*(.*)
                            /
                             # create a new Optional Argument object
+                            $roundBracketCounter++;
                             my $roundBracket = LatexIndent::RoundBrackets->new(begin=>$1,
                                                                     name=>${$self}{name}.":roundBracket",
                                                                     nameForIndentationSettings=>${$self}{parent},
@@ -70,6 +71,7 @@ sub find_round_brackets{
                                                                     # the last argument (determined by $10 eq '') needs information from the argument container object
                                                                     endImmediatelyFollowedByComment=>($10 eq '')?${$self}{endImmediatelyFollowedByComment}:($9?1:0),
                                                                     horizontalTrailingSpace=>$6?$6:q(),
+                                                                    id=>$tokens{roundBracket}.$roundBracketCounter,
                                                                   );
 
                             # the settings and storage of most objects has a lot in common
@@ -83,14 +85,6 @@ sub get_object_attribute_for_indentation_settings{
     my $self = shift;
     
     return ${$self}{modifyLineBreaksYamlName};
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $roundBracketCounter++;
-    ${$self}{id} = "$tokens{roundBracket}$roundBracketCounter";
-    return;
 }
 
 sub tasks_particular_to_each_object{

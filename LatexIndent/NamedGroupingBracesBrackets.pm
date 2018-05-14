@@ -23,7 +23,6 @@ use LatexIndent::LogFile qw/$logger/;
 use Exporter qw/import/;
 our @ISA = "LatexIndent::Command"; # class inheritance, Programming Perl, pg 321
 our @EXPORT_OK = qw/construct_grouping_braces_brackets_regexp $grouping_braces_regexp $grouping_braces_regexpTrailingComment/;
-our $groupingBracesCounter;
 our $grouping_braces_regexp; 
 our $grouping_braces_regexpTrailingComment; 
 
@@ -50,14 +49,6 @@ sub construct_grouping_braces_brackets_regexp{
     # something {value} grouping braces with trailing comment
     $grouping_braces_regexpTrailingComment = qr/$grouping_braces_regexp\h*((?:$trailingCommentRegExp\h*)*)?/;
 
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $groupingBracesCounter++;
-    ${$self}{id} = "$tokens{namedGroupingBracesBrackets}$groupingBracesCounter";
-    return;
 }
 
 sub get_replacement_text{

@@ -78,6 +78,7 @@ sub find_aligned_block{
               ${$self}{body} =~ s/
                                     $alignmentRegExp
                                 /
+                                    $alignmentBlockCounter++;
                                     # create a new Environment object
                                     my $alignmentBlockObj = LatexIndent::AlignmentAtAmpersand->new( begin=>$1,
                                                                           body=>$2,
@@ -89,6 +90,7 @@ sub find_aligned_block{
                                                                             body=>1,
                                                                             end=>0,
                                                                           },
+                                                                          id=>$tokens{alignmentBlock}.$alignmentBlockCounter,
                                                                           );
             
                                     # log file output
@@ -112,14 +114,6 @@ sub modify_line_breaks_settings{
 }
 
 sub tasks_particular_to_each_object{
-    return;
-}
-
-sub create_unique_id{
-    my $self = shift;
-
-    $alignmentBlockCounter++;
-    ${$self}{id} = "$tokens{alignmentBlock}$alignmentBlockCounter";
     return;
 }
 
