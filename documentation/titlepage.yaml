@@ -1,0 +1,5 @@
+defaultIndent: " "
+verbatimEnvironments:
+    lstlisting: 0
+noAdditionalIndent:
+    lstlisting: 1

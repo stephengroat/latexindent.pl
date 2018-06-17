@@ -21,5 +21,6 @@ documentation/*.pyg
 documentation/*.bbl
 documentation/*.blg
 documentation/latexindent.pdf
+documentation/titlepage*.pdf
 documentation/figure-schematic.pdf
 *.out
