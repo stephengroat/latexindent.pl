@@ -5,9 +5,9 @@
 *.blg
 *.ptc
 *.exe
+*.aux
 documentation/_minted-latexindent/
 documentation/latexindent-blx.*
-documentation/*.aux
 documentation/*.listing
 documentation/*.lol
 documentation/*.new
@@ -20,7 +20,6 @@ nytprof*
 documentation/*.pyg
 documentation/*.bbl
 documentation/*.blg
-documentation/latexindent.pdf
-documentation/titlepage*.pdf
-documentation/figure-schematic.pdf
+documentation/*.pdf
+documentation/titlepage/*.pdf
 *.out

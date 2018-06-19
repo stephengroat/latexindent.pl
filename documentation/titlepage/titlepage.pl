@@ -39,7 +39,7 @@ $body =~ s/(\\begin\{lstlisting}\[.*?\]\h*\R)(.*?)(\\end\{lstlisting\})/
 
 # start the tikzpicture for overlay
 my $draw = '\begin{tikzpicture}[overlay,remember picture]
-	\draw[opacity=0.75,fill=red!50!white,draw=red,very thick,rounded corners=.5ex]
+	\draw[opacity=0.75,fill=black!50!white,draw=white,rounded corners=.5ex,line width=3pt]
 ($(linebegin1)+(0ex,-1ex)$)'."\n";
 
 # loop down the left hand side
@@ -70,5 +70,7 @@ $body =~ s/(\\end\{lstlisting\})/$1\n$draw/;
 open(OUTPUTFILE,">","titlepage-tikzmark.tex");
 print OUTPUTFILE $body;
 close(OUTPUTFILE);
+
+system('arara titlepage-tikzmark.tex');
     
 exit; 

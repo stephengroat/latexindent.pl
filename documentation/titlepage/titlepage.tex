@@ -1,0 +1,60 @@
+% arara: pdflatex
+% arara: pdflatex
+\documentclass[11pt]{article}
+\usepackage{listingsutf8}
+\usepackage[margin=1cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand{\tikzmark}[1]{%
+  \tikz[overlay,remember picture] \node[text=black,
+    inner sep=2pt] (#1) {};}
+\begin{document}
+\pagestyle{empty}
+\pagecolor{black}
+\begin{lstlisting}[escapeinside={(*@}{@*)},basicstyle=\ttfamily]
+\NewDocumentCommand{\announce}{ s m s m }{%
+  \IfBooleanTF{#1}%
+  {% \announce*
+    \tcbdocmarginnote
+    \IfBooleanTF{#3}%
+    {% \announce*{date}*[text] means *updated* as of <date>
+      \tcbdocupdated{#2}%
+    }%
+    {% \announce*{date}[text] means *new* as of <date>
+      \tcbdocnew{#2}%
+    }%
+  }%
+  \IfBooleanTF{#3}%
+  {%
+    \addcontentsline{new}{cmhtitle}{#4 (U)}%
+  }%
+  {%
+    \addcontentsline{new}{cmhtitle}{#4 (N)}%
+  }%
+}%
+{% \announce
+  \tcbdocmarginnote{%
+    \IfBooleanTF{#3}%
+    {% \announce{date}*[text] means *updated* as of <date>
+      \tcbdocupdated{#2}%
+    }%
+    {% \announce{date}[text] means *new* as of <date>
+      \tcbdocnew{#2}%
+    }%
+  }%
+}}
+\ifnum\x
+  something
+\else
+  something
+\fi
+\begin{itemize}
+  \item item text item text item text item text
+        item text item text item text item text
+        item text item text item text item text
+  \item item text item text item text item text
+        item text item text item text item text
+        item text item text item text item text
+\end{itemize}
+\end{lstlisting}
+\end{document}
