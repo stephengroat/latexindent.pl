@@ -1,7 +1,12 @@
 language: perl
-os:
-  - linux
-  - osx
+addons:
+  homebrew:
+    update: true
+    brewfile: true
+matrix:
+  include:
+    - language: generic
+      os: osx
 perl:
   - "5.30"
   - "5.28"
